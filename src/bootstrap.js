@@ -1,30 +1,23 @@
-import { warn, isFn, loadScript } from "./util";
-import api from "./api";
-import { getRouter, getOptions } from "../src/install";
-import optOut from "./api/opt-out";
-import pageTracker from "./page-tracker";
+import { loadScript } from "@/utils";
+import { isBootstrapped, isReady } from "@/states";
+import { options } from "@/options";
 
-export default function () {
+export default () => {
   if (typeof document === "undefined" || typeof window === "undefined") {
     return;
   }
 
-  const {
-    enabled,
-    globalObjectName,
-    globalDataLayerName,
-    config,
-    pageTrackerEnabled,
-    onReady,
-    disableScriptLoad,
-  } = getOptions();
-
-  const Router = getRouter();
-  const isPageTrackerEnabled = Boolean(pageTrackerEnabled && Router);
-
-  if (!enabled) {
-    optOut();
+  if (isBootstrapped.value) {
+    return;
   }
+
+  const { globalObjectName, globalDataLayerName, id } = options;
+
+  if (id == null) {
+    return;
+  }
+
+  isBootstrapped.value = true;
 
   if (window[globalObjectName] == null) {
     window[globalDataLayerName] = window[globalDataLayerName] || [];
@@ -35,31 +28,10 @@ export default function () {
 
   window[globalObjectName]("js", new Date());
 
-  if (isPageTrackerEnabled) {
-    pageTracker();
-  } else {
-    api.config(config.params);
-  }
-
-  if (disableScriptLoad) {
-    return;
-  }
-
   const domain = "https://www.googletagmanager.com";
-  const resource = `${domain}/gtag/js?id=${config.id}&l=${globalDataLayerName}`;
+  const resource = `${domain}/gtag/js?id=${id}&l=${globalDataLayerName}`;
 
-  return loadScript(resource, domain)
-    .then(() => {
-      const library = window[globalObjectName];
-
-      if (isFn(onReady)) {
-        onReady(library);
-      }
-
-      return library;
-    })
-    .catch((error) => {
-      warn("Ops! Something happened and gtag.js couldn't be loaded", error);
-      return error;
-    });
-}
+  loadScript(resource).then(() => {
+    isReady.value = true;
+  });
+};

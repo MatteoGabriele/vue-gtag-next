@@ -1,24 +1,18 @@
-import { setOptions as _setOptions, install } from "./install";
-import _bootstrap from "./bootstrap";
-import api from "./api";
+import { watch } from "vue";
+import bootstrap from "@/bootstrap";
+import { options, mergeOptions } from "@/options";
 
-export default install;
-export { install };
+export default {
+  install: (app, newOptions = {}) => {
+    mergeOptions(newOptions);
 
-export const bootstrap = _bootstrap;
-export const setOptions = _setOptions;
+    watch(
+      [() => options.isGtagEnabled, () => options.id],
+      ([isEnabled, id]) => id && isEnabled && bootstrap(),
+      { immediate: true }
+    );
+  },
+};
 
-// export api for usages outside Vuejs context
-export const query = api.query;
-export const config = api.config;
-export const event = api.event;
-export const pageview = api.pageview;
-export const screenview = api.screenview;
-export const customMap = api.customMap;
-export const time = api.time;
-export const exception = api.exception;
-export const linker = api.linker;
-export const purchase = api.purchase;
-export const set = api.set;
-export const optIn = api.optIn;
-export const optOut = api.optOut;
+export { useOptions } from "@/options";
+export { isBootstrapped, isReady } from "@/states";
