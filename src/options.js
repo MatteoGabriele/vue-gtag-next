@@ -1,14 +1,12 @@
 import { reactive, toRefs } from "vue";
 
-export let options = reactive({
+export const options = reactive({
   id: null,
-  params: {},
-  appName: null,
   isGtagEnabled: true,
   globalObjectName: "gtag",
   globalDataLayerName: "dataLayer",
-  isPageTrackerEnabled: false,
-  isLoggerEnabled: false,
+  domain: "https://www.googletagmanager.com",
+  customResource: null,
 });
 
 export const useOptions = () => {
@@ -16,5 +14,7 @@ export const useOptions = () => {
 };
 
 export const mergeOptions = (newOptions = {}) => {
-  options = reactive({ ...options, ...newOptions });
+  Object.keys(newOptions).forEach((key) => {
+    options[key] = newOptions[key];
+  });
 };

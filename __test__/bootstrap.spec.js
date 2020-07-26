@@ -25,6 +25,7 @@ describe("bootstrap", () => {
     delete global[options.globalDataLayerName];
 
     jest.restoreAllMocks();
+    jest.clearAllMocks();
   });
 
   it("should not load script without an id", () => {
@@ -100,7 +101,8 @@ describe("bootstrap", () => {
     bootstrap();
 
     expect(loadScript).toHaveBeenCalledWith(
-      "https://www.googletagmanager.com/gtag/js?id=1&l=dataLayer"
+      "https://www.googletagmanager.com/gtag/js?id=1&l=dataLayer",
+      "https://www.googletagmanager.com"
     );
   });
 
@@ -112,5 +114,16 @@ describe("bootstrap", () => {
     await flushPromises();
 
     expect(isReady.value).toEqual(true);
+  });
+
+  it("should load a custom source", () => {
+    mergeOptions({ id: 1, customResource: "foo.js" });
+
+    bootstrap();
+
+    expect(loadScript).toHaveBeenCalledWith(
+      "foo.js",
+      "https://www.googletagmanager.com"
+    );
   });
 });

@@ -12,7 +12,13 @@ export const bootstrap = () => {
     return;
   }
 
-  const { globalObjectName, globalDataLayerName, id } = options;
+  const {
+    domain,
+    customResource,
+    globalObjectName,
+    globalDataLayerName,
+    id,
+  } = options;
 
   if (id == null) {
     return;
@@ -29,10 +35,11 @@ export const bootstrap = () => {
 
   window[globalObjectName]("js", new Date());
 
-  const domain = "https://www.googletagmanager.com";
-  const resource = `${domain}/gtag/js?id=${id}&l=${globalDataLayerName}`;
+  const resource =
+    customResource ||
+    `${options.domain}/gtag/js?id=${options.id}&l=${options.globalDataLayerName}`;
 
-  loadScript(resource).then(() => {
+  loadScript(resource, domain).then(() => {
     isReady.value = true;
   });
 };
