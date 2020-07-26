@@ -1,5 +1,5 @@
 import { isReady, isBootstrapped } from "../src/states";
-import bootstrap from "../src/bootstrap";
+import { bootstrap } from "../src/bootstrap";
 import { loadScript } from "../src/utils";
 import { mergeOptions, options } from "../src/options";
 import flushPromises from "flush-promises";
@@ -21,8 +21,6 @@ describe("bootstrap", () => {
   });
 
   afterEach(() => {
-    // This is the only way I found to clear the global scope
-    // from injected variables
     delete global[options.globalObjectName];
     delete global[options.globalDataLayerName];
 

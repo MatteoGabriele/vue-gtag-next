@@ -1,16 +1,10 @@
-import { watch } from "vue";
-import bootstrap from "@/bootstrap";
-import { options, mergeOptions } from "@/options";
+import { useBootstrapWatcher } from "@/bootstrap";
+import { mergeOptions } from "@/options";
 
 export default {
   install: (app, newOptions = {}) => {
     mergeOptions(newOptions);
-
-    watch(
-      [() => options.isGtagEnabled, () => options.id],
-      ([isEnabled, id]) => id && isEnabled && bootstrap(),
-      { immediate: true }
-    );
+    useBootstrapWatcher();
   },
 };
 
