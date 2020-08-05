@@ -2,6 +2,7 @@ import { reactive, toRefs } from "vue";
 
 export const options = reactive({
   id: null,
+  params: {},
   isGtagEnabled: false,
   globalObjectName: "gtag",
   globalDataLayerName: "dataLayer",

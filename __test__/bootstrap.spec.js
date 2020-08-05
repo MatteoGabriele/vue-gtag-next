@@ -3,10 +3,9 @@ import { bootstrap } from "../src/bootstrap";
 import { loadScript } from "../src/utils";
 import { mergeOptions, options } from "../src/options";
 import flushPromises from "flush-promises";
-import mockdate from "mockdate";
+import config from "../src/api/config";
 
-mockdate.set("2020-01-01T01:01:01Z");
-
+jest.mock("../src/api/config");
 jest.mock("../src/utils");
 jest.mock("../src/states");
 
@@ -21,9 +20,6 @@ describe("bootstrap", () => {
   });
 
   afterEach(() => {
-    delete global[options.globalObjectName];
-    delete global[options.globalDataLayerName];
-
     jest.restoreAllMocks();
     jest.clearAllMocks();
   });
@@ -68,33 +64,6 @@ describe("bootstrap", () => {
     expect(loadScript).not.toHaveBeenCalled();
   });
 
-  it("should register gtag global object", () => {
-    mergeOptions({ id: 1 });
-
-    bootstrap();
-
-    expect(window.gtag).toBeDefined();
-  });
-
-  it("should register gtag global object under another name", () => {
-    mergeOptions({ globalObjectName: "foo", id: 1 });
-
-    bootstrap();
-
-    expect(window.foo).toBeDefined();
-    expect(window.gtag).not.toBeDefined();
-  });
-
-  it("should push arguments inside the dataLayer", () => {
-    mergeOptions({ id: 1 });
-
-    bootstrap();
-
-    window.gtag("foo", "bar");
-
-    expect(window.dataLayer).toMatchSnapshot();
-  });
-
   it("should load script", () => {
     mergeOptions({ id: 1 });
 
@@ -125,5 +94,13 @@ describe("bootstrap", () => {
       "foo.js",
       "https://www.googletagmanager.com"
     );
+  });
+
+  it("should fire config once bootstrapped", () => {
+    mergeOptions({ id: 1, params: { a: 1 } });
+
+    bootstrap();
+
+    expect(config).toHaveBeenCalledWith({ a: 1 });
   });
 });

@@ -2,6 +2,7 @@ import { watch } from "vue";
 import { loadScript } from "@/utils";
 import { isBootstrapped, isReady } from "@/states";
 import { useOptions } from "@/options";
+import config from "@/api/config";
 
 export const bootstrap = () => {
   if (typeof document === "undefined" || typeof window === "undefined") {
@@ -15,8 +16,8 @@ export const bootstrap = () => {
   const {
     domain,
     customResource,
-    globalObjectName,
     globalDataLayerName,
+    params,
     id,
   } = useOptions();
 
@@ -26,14 +27,7 @@ export const bootstrap = () => {
 
   isBootstrapped.value = true;
 
-  if (window[globalObjectName.value] == null) {
-    window[globalDataLayerName.value] = window[globalDataLayerName.value] || [];
-    window[globalObjectName.value] = function () {
-      window[globalDataLayerName.value].push(arguments);
-    };
-  }
-
-  window[globalObjectName.value]("js", new Date());
+  config(params.value);
 
   const resource =
     customResource.value ||

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`bootstrap should push arguments inside the dataLayer 1`] = `
+exports[`register-global-object should push arguments inside the dataLayer 1`] = `
 Array [
   Arguments [
     "js",
