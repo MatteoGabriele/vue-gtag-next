@@ -1,5 +1,6 @@
 export { default as config } from "@/api/config";
 export { default as customMap } from "@/api/custom-map";
+export { default as disable } from "@/api/disable";
 export { default as event } from "@/api/event";
 export { default as exception } from "@/api/exception";
 export { default as linker } from "@/api/linker";
