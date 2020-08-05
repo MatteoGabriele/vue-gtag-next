@@ -1,7 +1,7 @@
 import { watch } from "vue";
 import { loadScript } from "@/utils";
 import { isBootstrapped, isReady } from "@/states";
-import { options } from "@/options";
+import { useOptions } from "@/options";
 
 export const bootstrap = () => {
   if (typeof document === "undefined" || typeof window === "undefined") {
@@ -18,35 +18,37 @@ export const bootstrap = () => {
     globalObjectName,
     globalDataLayerName,
     id,
-  } = options;
+  } = useOptions();
 
-  if (id == null) {
+  if (id.value == null) {
     return;
   }
 
   isBootstrapped.value = true;
 
-  if (window[globalObjectName] == null) {
-    window[globalDataLayerName] = window[globalDataLayerName] || [];
-    window[globalObjectName] = function () {
-      window[globalDataLayerName].push(arguments);
+  if (window[globalObjectName.value] == null) {
+    window[globalDataLayerName.value] = window[globalDataLayerName.value] || [];
+    window[globalObjectName.value] = function () {
+      window[globalDataLayerName.value].push(arguments);
     };
   }
 
-  window[globalObjectName]("js", new Date());
+  window[globalObjectName.value]("js", new Date());
 
   const resource =
-    customResource ||
-    `${options.domain}/gtag/js?id=${options.id}&l=${options.globalDataLayerName}`;
+    customResource.value ||
+    `${domain.value}/gtag/js?id=${id.value}&l=${globalDataLayerName.value}`;
 
-  loadScript(resource, domain).then(() => {
+  loadScript(resource, domain.value).then(() => {
     isReady.value = true;
   });
 };
 
 export const useBootstrapWatcher = () => {
+  const { isGtagEnabled, id } = useOptions();
+
   watch(
-    [() => options.isGtagEnabled, () => options.id],
+    [() => isGtagEnabled.value, () => id.value],
     ([isEnabled, id]) => id && isEnabled && bootstrap(),
     { immediate: true }
   );
