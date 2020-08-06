@@ -1,16 +1,15 @@
 import config from "@/api/config";
 
-export default (...args) => {
-  const [arg] = args;
+export default (value) => {
   let params = {};
 
-  if (typeof arg === "string") {
+  if (typeof value === "string") {
     params = {
-      page_path: arg,
+      page_path: value,
       page_location: window.location.href,
     };
   } else {
-    params = arg;
+    params = value;
   }
 
   config(params);
