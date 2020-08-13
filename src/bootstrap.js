@@ -1,7 +1,7 @@
 import { watch } from "vue";
 import { loadScript } from "@/utils";
 import { isBootstrapped, isReady } from "@/states";
-import { useOptions } from "@/options";
+import { hasId, defaultProperty, allProperties, useOptions } from "@/options";
 import config from "@/api/config";
 
 export const bootstrap = () => {
@@ -13,25 +13,21 @@ export const bootstrap = () => {
     return;
   }
 
-  const {
-    domain,
-    customResource,
-    globalDataLayerName,
-    params,
-    id,
-  } = useOptions();
+  const { domain, customResource, globalDataLayerName } = useOptions();
 
-  if (id.value == null) {
+  if (!hasId.value) {
     return;
   }
 
   isBootstrapped.value = true;
 
-  config(params.value);
+  allProperties.value.forEach((property) => {
+    config(property.params);
+  });
 
   const resource =
     customResource.value ||
-    `${domain.value}/gtag/js?id=${id.value}&l=${globalDataLayerName.value}`;
+    `${domain.value}/gtag/js?id=${defaultProperty.value.id}&l=${globalDataLayerName.value}`;
 
   loadScript(resource, domain.value).then(() => {
     isReady.value = true;
@@ -39,10 +35,10 @@ export const bootstrap = () => {
 };
 
 export const useBootstrapWatcher = () => {
-  const { isGtagEnabled, id } = useOptions();
+  const { isEnabled, id } = useOptions();
 
   watch(
-    [() => isGtagEnabled.value, () => id.value],
+    [() => isEnabled.value, () => id.value],
     ([isEnabled, id]) => id && isEnabled && bootstrap(),
     { immediate: true }
   );

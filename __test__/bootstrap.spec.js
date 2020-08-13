@@ -31,7 +31,9 @@ describe("bootstrap", () => {
   });
 
   it("should not load script if already bootstrapped", () => {
-    mergeOptions({ id: 1 });
+    mergeOptions({
+      property: { id: 1 },
+    });
 
     isBootstrapped.value = true;
 
@@ -45,7 +47,9 @@ describe("bootstrap", () => {
 
     windowSpy.mockImplementation(() => undefined);
 
-    mergeOptions({ id: 1 });
+    mergeOptions({
+      property: { id: 1 },
+    });
 
     bootstrap();
 
@@ -57,7 +61,9 @@ describe("bootstrap", () => {
 
     documentSpy.mockImplementation(() => undefined);
 
-    mergeOptions({ id: 1 });
+    mergeOptions({
+      property: { id: 1 },
+    });
 
     bootstrap();
 
@@ -65,7 +71,9 @@ describe("bootstrap", () => {
   });
 
   it("should load script", () => {
-    mergeOptions({ id: 1 });
+    mergeOptions({
+      property: { id: 1 },
+    });
 
     bootstrap();
 
@@ -76,7 +84,9 @@ describe("bootstrap", () => {
   });
 
   it("should set isReady to true once loadScript is resolved", async () => {
-    mergeOptions({ id: 1 });
+    mergeOptions({
+      property: { id: 1 },
+    });
 
     bootstrap();
 
@@ -86,7 +96,10 @@ describe("bootstrap", () => {
   });
 
   it("should load a custom source", () => {
-    mergeOptions({ id: 1, customResource: "foo.js" });
+    mergeOptions({
+      property: { id: 1 },
+      customResource: "foo.js",
+    });
 
     bootstrap();
 
@@ -97,10 +110,37 @@ describe("bootstrap", () => {
   });
 
   it("should fire config once bootstrapped", () => {
-    mergeOptions({ id: 1, params: { a: 1 } });
+    mergeOptions({
+      property: {
+        id: 1,
+        params: { a: 1 },
+      },
+    });
 
     bootstrap();
 
     expect(config).toHaveBeenCalledWith({ a: 1 });
+  });
+
+  it("should bootstrap multiple properties", () => {
+    mergeOptions({
+      property: [
+        {
+          id: 1,
+          params: { a: 1 },
+        },
+        {
+          id: 2,
+          default: true,
+          params: { b: 1 },
+        },
+      ],
+    });
+
+    bootstrap();
+
+    expect(config).toHaveBeenCalledTimes(2);
+    expect(config).toHaveBeenNthCalledWith(1, { a: 1 });
+    expect(config).toHaveBeenNthCalledWith(2, { b: 1 });
   });
 });
