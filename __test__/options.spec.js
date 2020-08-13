@@ -1,4 +1,4 @@
-import { getDefaultProperty, mergeOptions, options } from "@/options";
+import { defaultProperty, mergeOptions, options } from "@/options";
 
 const defaultOptions = { ...options };
 
@@ -16,7 +16,7 @@ describe("options", () => {
     expect(options).toMatchSnapshot();
   });
 
-  describe("getDefaultProperty", () => {
+  describe("defaultProperty", () => {
     it("should return the object", () => {
       mergeOptions({
         property: {
@@ -24,7 +24,7 @@ describe("options", () => {
         },
       });
 
-      expect(getDefaultProperty()).toEqual({ id: 1 });
+      expect(defaultProperty.value).toEqual({ id: 1 });
     });
 
     it("should return the only item in the array", () => {
@@ -36,7 +36,7 @@ describe("options", () => {
         ],
       });
 
-      expect(getDefaultProperty()).toEqual({ id: 1 });
+      expect(defaultProperty.value).toEqual({ id: 1 });
     });
 
     it("should return the only item in the array", () => {
@@ -52,7 +52,7 @@ describe("options", () => {
         ],
       });
 
-      expect(getDefaultProperty()).toEqual({ id: 2, default: true });
+      expect(defaultProperty.value).toEqual({ id: 2, default: true });
     });
   });
 });
