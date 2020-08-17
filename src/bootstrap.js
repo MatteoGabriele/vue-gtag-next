@@ -1,8 +1,14 @@
 import { watch } from "vue";
 import { loadScript } from "@/utils";
 import { isBootstrapped, isReady } from "@/states";
-import { hasId, defaultProperty, allProperties, useOptions } from "@/options";
-import config from "@/api/config";
+import query from "@/api/query";
+import {
+  isTracking,
+  hasId,
+  defaultProperty,
+  allProperties,
+  useOptions,
+} from "@/options";
 
 export const bootstrap = () => {
   if (typeof document === "undefined" || typeof window === "undefined") {
@@ -22,7 +28,14 @@ export const bootstrap = () => {
   isBootstrapped.value = true;
 
   allProperties.value.forEach((property) => {
-    config(property.params);
+    const params = property.params || {};
+
+    // in SPA send_page_view needs to be false during the first config call
+    if (typeof params.send_page_view === "undefined") {
+      params.send_page_view = false;
+    }
+
+    query("config", property.id, params);
   });
 
   const resource =
@@ -35,11 +48,9 @@ export const bootstrap = () => {
 };
 
 export const useBootstrapWatcher = () => {
-  const { isEnabled, id } = useOptions();
-
   watch(
-    [() => isEnabled.value, () => id.value],
-    ([isEnabled, id]) => id && isEnabled && bootstrap(),
+    () => isTracking.value,
+    (val) => val && bootstrap(),
     { immediate: true }
   );
 };

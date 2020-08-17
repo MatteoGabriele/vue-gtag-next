@@ -1,5 +1,5 @@
-import { mergeOptions, options } from "../src/options";
-import registerGlobalObject from "../src/register-global-object";
+import { mergeOptions, options } from "@/options";
+import registerGlobalObject from "@/register-global-object";
 import mockdate from "mockdate";
 
 mockdate.set("2020-01-01T01:01:01Z");

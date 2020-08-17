@@ -39,9 +39,6 @@
       "json",
       "html"
     ],
-    "testMatch": [
-      "**/__test__/**.spec.js"
-    ],
     "moduleNameMapper": {
       "@/(.*)$": "<rootDir>/src/$1"
     }

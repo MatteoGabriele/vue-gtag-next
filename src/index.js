@@ -15,3 +15,4 @@ export default {
 
 export { useOptions } from "@/options";
 export { isBootstrapped, isReady } from "@/states";
+export { default as useGtag } from "@/api/use-gtag";

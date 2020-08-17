@@ -1,13 +1,14 @@
-import { isReady, isBootstrapped } from "../src/states";
-import { bootstrap } from "../src/bootstrap";
-import { loadScript } from "../src/utils";
-import { mergeOptions, options } from "../src/options";
+import { isReady, isBootstrapped } from "@/states";
+import { bootstrap } from "@/bootstrap";
+import { loadScript } from "@/utils";
+import { mergeOptions, options } from "@/options";
 import flushPromises from "flush-promises";
-import config from "../src/api/config";
+import query from "@/api/query";
 
-jest.mock("../src/api/config");
-jest.mock("../src/utils");
-jest.mock("../src/states");
+jest.mock("@/api/config");
+jest.mock("@/utils");
+jest.mock("@/states");
+jest.mock("@/api/query");
 
 const originalOptions = { ...options };
 
@@ -109,7 +110,7 @@ describe("bootstrap", () => {
     );
   });
 
-  it("should fire config once bootstrapped", () => {
+  it("should fire query once bootstrapped", () => {
     mergeOptions({
       property: {
         id: 1,
@@ -119,7 +120,10 @@ describe("bootstrap", () => {
 
     bootstrap();
 
-    expect(config).toHaveBeenCalledWith({ a: 1 });
+    expect(query).toHaveBeenCalledWith("config", 1, {
+      a: 1,
+      send_page_view: false,
+    });
   });
 
   it("should bootstrap multiple properties", () => {
@@ -139,8 +143,14 @@ describe("bootstrap", () => {
 
     bootstrap();
 
-    expect(config).toHaveBeenCalledTimes(2);
-    expect(config).toHaveBeenNthCalledWith(1, { a: 1 });
-    expect(config).toHaveBeenNthCalledWith(2, { b: 1 });
+    expect(query).toHaveBeenCalledTimes(2);
+    expect(query).toHaveBeenNthCalledWith(1, "config", 1, {
+      a: 1,
+      send_page_view: false,
+    });
+    expect(query).toHaveBeenNthCalledWith(2, "config", 2, {
+      b: 1,
+      send_page_view: false,
+    });
   });
 });

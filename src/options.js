@@ -21,9 +21,7 @@ export const defaultProperty = computed(() => {
   }
 
   if (Array.isArray(property.value)) {
-    return property.value.length === 1
-      ? property.value[0]
-      : property.value.find((p) => p.default === true);
+    return property.value.find((p) => p.default === true) || property.value[0];
   }
 
   return property.value;
@@ -48,3 +46,10 @@ export const mergeOptions = (newOptions = {}) => {
     options[key] = newOptions[key];
   });
 };
+
+export const isTracking = computed(() => {
+  const { isEnabled } = useOptions();
+  const property = defaultProperty.value;
+
+  return property && property.id && isEnabled.value;
+});

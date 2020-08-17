@@ -1,7 +1,7 @@
-import { useOptions } from "@/options";
+import { allProperties } from "@/options";
 
 export default (value = true) => {
-  const { id } = useOptions();
-
-  window[`ga-disable-${id.value}`] = value;
+  allProperties.value.forEach((property) => {
+    window[`ga-disable-${property.id}`] = value;
+  });
 };

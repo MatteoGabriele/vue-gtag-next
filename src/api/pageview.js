@@ -12,5 +12,9 @@ export default (value) => {
     params = value;
   }
 
+  if (typeof params.send_page_view === "undefined") {
+    params.send_page_view = true;
+  }
+
   config(params);
 };
