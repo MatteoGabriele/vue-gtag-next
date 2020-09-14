@@ -1,23 +1,27 @@
-import { isReady, isBootstrapped } from "@/states";
+import state, { isReady, isBootstrapped } from "@/state";
 import { bootstrap } from "@/bootstrap";
-import { loadScript } from "@/utils";
-import { mergeOptions, options } from "@/options";
+import { merge, loadScript } from "@/utils";
 import flushPromises from "flush-promises";
 import query from "@/api/query";
 
 jest.mock("@/api/config");
-jest.mock("@/utils");
-jest.mock("@/states");
 jest.mock("@/api/query");
 
-const originalOptions = { ...options };
+jest.mock("@/utils", () => {
+  const utils = jest.requireActual("@/utils");
+  return {
+    ...utils,
+    loadScript: jest.fn(() => Promise.resolve()),
+  };
+});
+
+const defaultState = { ...state };
 
 describe("bootstrap", () => {
   beforeEach(() => {
-    loadScript.mockReturnValueOnce(Promise.resolve());
-    isBootstrapped.value = false;
     isReady.value = false;
-    mergeOptions(originalOptions);
+    isBootstrapped.value = false;
+    merge(state, defaultState);
   });
 
   afterEach(() => {
@@ -32,7 +36,7 @@ describe("bootstrap", () => {
   });
 
   it("should not load script if already bootstrapped", () => {
-    mergeOptions({
+    merge(state, {
       property: { id: 1 },
     });
 
@@ -48,7 +52,7 @@ describe("bootstrap", () => {
 
     windowSpy.mockImplementation(() => undefined);
 
-    mergeOptions({
+    merge(state, {
       property: { id: 1 },
     });
 
@@ -62,7 +66,7 @@ describe("bootstrap", () => {
 
     documentSpy.mockImplementation(() => undefined);
 
-    mergeOptions({
+    merge(state, {
       property: { id: 1 },
     });
 
@@ -72,7 +76,7 @@ describe("bootstrap", () => {
   });
 
   it("should load script", () => {
-    mergeOptions({
+    merge(state, {
       property: { id: 1 },
     });
 
@@ -85,7 +89,7 @@ describe("bootstrap", () => {
   });
 
   it("should set isReady to true once loadScript is resolved", async () => {
-    mergeOptions({
+    merge(state, {
       property: { id: 1 },
     });
 
@@ -97,7 +101,7 @@ describe("bootstrap", () => {
   });
 
   it("should load a custom source", () => {
-    mergeOptions({
+    merge(state, {
       property: { id: 1 },
       customResource: "foo.js",
     });
@@ -111,7 +115,7 @@ describe("bootstrap", () => {
   });
 
   it("should fire query once bootstrapped", () => {
-    mergeOptions({
+    merge(state, {
       property: {
         id: 1,
         params: { a: 1 },
@@ -127,7 +131,7 @@ describe("bootstrap", () => {
   });
 
   it("should bootstrap multiple properties", () => {
-    mergeOptions({
+    merge(state, {
       property: [
         {
           id: 1,

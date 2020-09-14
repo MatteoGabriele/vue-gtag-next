@@ -1,10 +1,11 @@
-import { defaultProperty, mergeOptions, options } from "@/options";
+import state, { defaultProperty } from "@/state";
+import { merge } from "@/utils";
 
-const defaultOptions = { ...options };
+const defaultState = { ...state };
 
 describe("options", () => {
   beforeEach(() => {
-    mergeOptions(defaultOptions);
+    merge(state, defaultState);
   });
 
   afterEach(() => {
@@ -12,13 +13,13 @@ describe("options", () => {
     jest.clearAllMocks();
   });
 
-  it("should render default plugin options", () => {
-    expect(options).toMatchSnapshot();
+  it("should render default plugin state", () => {
+    expect(state).toMatchSnapshot();
   });
 
   describe("defaultProperty", () => {
     it("should return the object", () => {
-      mergeOptions({
+      merge(state, {
         property: {
           id: 1,
         },
@@ -28,7 +29,7 @@ describe("options", () => {
     });
 
     it("should return the only item in the array", () => {
-      mergeOptions({
+      merge(state, {
         property: [
           {
             id: 1,
@@ -40,7 +41,7 @@ describe("options", () => {
     });
 
     it("should return the only item in the array", () => {
-      mergeOptions({
+      merge(state, {
         property: [
           {
             id: 1,

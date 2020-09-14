@@ -1,19 +1,20 @@
-import { mergeOptions, options } from "@/options";
+import state from "@/state";
+import { merge } from "@/utils";
 import registerGlobalObject from "@/register-global-object";
 import mockdate from "mockdate";
 
 mockdate.set("2020-01-01T01:01:01Z");
 
-const originalOptions = { ...options };
+const defaultState = { ...state };
 
 describe("register-global-object", () => {
   beforeEach(() => {
-    mergeOptions(originalOptions);
+    merge(state, defaultState);
   });
 
   afterEach(() => {
-    delete global[options.globalObjectName];
-    delete global[options.globalDataLayerName];
+    delete global[state.globalObjectName];
+    delete global[state.globalDataLayerName];
 
     jest.restoreAllMocks();
     jest.clearAllMocks();
@@ -25,7 +26,7 @@ describe("register-global-object", () => {
   });
 
   it("should register gtag global object under another name", () => {
-    mergeOptions({ globalObjectName: "foo" });
+    merge(state, { globalObjectName: "foo" });
     registerGlobalObject();
 
     expect(window.foo).toBeDefined();

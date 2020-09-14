@@ -1,16 +1,24 @@
 import config from "@/api/config";
 import query from "@/api/query";
-import { mergeOptions } from "@/options";
+import state from "@/state";
+import { merge } from "@/utils";
 
 jest.mock("@/api/query");
 
+const defaultState = { ...state };
+
 describe("api/config", () => {
+  beforeEach(() => {
+    merge(state, defaultState);
+  });
+
   afterEach(() => {
+    jest.restoreAllMocks();
     jest.clearAllMocks();
   });
 
   it("should be called", () => {
-    mergeOptions({
+    merge(state, {
       property: {
         id: 1,
       },
@@ -26,7 +34,7 @@ describe("api/config", () => {
   });
 
   it("should be called with all properties", () => {
-    mergeOptions({
+    merge(state, {
       property: [
         {
           id: 1,
