@@ -79,7 +79,9 @@ export const trackRouter = (router, newState = {}) => {
         });
 
         router.afterEach((to, from) => {
-          trackpage(to, from);
+          nextTick(() => {
+            trackpage(to, from);
+          });
         });
       });
     },
