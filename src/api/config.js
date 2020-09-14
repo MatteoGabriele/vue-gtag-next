@@ -1,4 +1,4 @@
-import { allProperties } from "@/options";
+import { allProperties } from "@/state";
 import query from "@/api/query";
 
 export default (...args) => {

@@ -6,7 +6,7 @@ Object {
   "domain": "https://www.googletagmanager.com",
   "globalDataLayerName": "dataLayer",
   "globalObjectName": "gtag",
-  "isEnabled": false,
+  "isEnabled": true,
   "property": null,
 }
 `;

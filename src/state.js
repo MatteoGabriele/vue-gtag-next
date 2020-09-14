@@ -1,20 +1,34 @@
-import { reactive, computed, toRefs } from "vue";
+import { ref, reactive, computed, toRefs } from "vue";
 
-export const options = reactive({
+const state = reactive({
   property: null,
-  isEnabled: false,
+  isEnabled: true,
   globalObjectName: "gtag",
   globalDataLayerName: "dataLayer",
   domain: "https://www.googletagmanager.com",
   customResource: null,
+  useDebugger: false,
 });
 
-export const useOptions = () => {
-  return toRefs(options);
-};
+export const routeState = reactive({
+  template: null,
+  appName: null,
+  useScreenview: false,
+  skipSamePath: true,
+});
+
+export const useState = () => toRefs(state);
+
+export const useRouteState = () => toRefs(routeState);
+
+export const isBootstrapped = ref(false);
+
+export const isReady = ref(false);
+
+export const isTrackRouterEnabled = ref(false);
 
 export const defaultProperty = computed(() => {
-  const { property } = useOptions();
+  const { property } = useState();
 
   if (!property.value) {
     return;
@@ -28,11 +42,12 @@ export const defaultProperty = computed(() => {
 });
 
 export const hasId = computed(() => {
-  return options.property && options.property.id !== null;
+  const { property } = useState();
+  return property.value && property.value.id !== null;
 });
 
 export const allProperties = computed(() => {
-  const { property } = useOptions();
+  const { property } = useState();
 
   if (Array.isArray(property.value)) {
     return property.value;
@@ -41,15 +56,11 @@ export const allProperties = computed(() => {
   return [property.value];
 });
 
-export const mergeOptions = (newOptions = {}) => {
-  Object.keys(newOptions).forEach((key) => {
-    options[key] = newOptions[key];
-  });
-};
-
 export const isTracking = computed(() => {
-  const { isEnabled } = useOptions();
+  const { isEnabled } = useState();
   const property = defaultProperty.value;
 
   return property && property.id && isEnabled.value;
 });
+
+export default state;

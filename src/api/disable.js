@@ -1,4 +1,4 @@
-import { allProperties } from "@/options";
+import { allProperties } from "@/state";
 
 export default (value = true) => {
   allProperties.value.forEach((property) => {

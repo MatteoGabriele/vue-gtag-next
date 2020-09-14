@@ -22,3 +22,9 @@ export const loadScript = (source, domain) => {
     script.onerror = reject;
   });
 };
+
+export const merge = (obj = {}, newObj = {}) => {
+  Object.keys(newObj).forEach((key) => {
+    obj[key] = newObj[key];
+  });
+};

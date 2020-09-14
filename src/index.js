@@ -1,11 +1,12 @@
 import { useBootstrapWatcher } from "@/bootstrap";
-import { mergeOptions } from "@/options";
+import { merge } from "@/utils";
+import state from "@/state";
 import * as api from "@/api";
 import registerGlobalObject from "@/register-global-object";
 
 export default {
-  install: (app, newOptions = {}) => {
-    mergeOptions(newOptions);
+  install: (app, newState = {}) => {
+    merge(state, newState);
     registerGlobalObject();
     useBootstrapWatcher();
 
@@ -13,6 +14,6 @@ export default {
   },
 };
 
-export { useOptions } from "@/options";
-export { isBootstrapped, isReady } from "@/states";
+export { isBootstrapped, isReady, isTracking, useState } from "@/state";
 export { default as useGtag } from "@/api/use-gtag";
+export { trackRouter } from "@/page-tracker";

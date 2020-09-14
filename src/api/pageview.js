@@ -1,4 +1,4 @@
-import config from "@/api/config";
+import event from "@/api/event";
 
 export default (value) => {
   let params = {};
@@ -16,5 +16,5 @@ export default (value) => {
     params.send_page_view = true;
   }
 
-  config(params);
+  event("page_view", params);
 };

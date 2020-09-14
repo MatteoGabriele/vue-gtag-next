@@ -1,5 +1,5 @@
 import query from "@/api/query";
-import { allProperties } from "@/options";
+import { allProperties } from "@/state";
 
 export default (eventName, eventParams = {}) => {
   const params = { ...eventParams };

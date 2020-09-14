@@ -1,14 +1,16 @@
 import { watch } from "vue";
 import { loadScript } from "@/utils";
-import { isBootstrapped, isReady } from "@/states";
 import query from "@/api/query";
 import {
   isTracking,
   hasId,
   defaultProperty,
   allProperties,
-  useOptions,
-} from "@/options";
+  useState,
+  isBootstrapped,
+  isReady,
+  isTrackRouterEnabled,
+} from "@/state";
 
 export const bootstrap = () => {
   if (typeof document === "undefined" || typeof window === "undefined") {
@@ -19,7 +21,7 @@ export const bootstrap = () => {
     return;
   }
 
-  const { domain, customResource, globalDataLayerName } = useOptions();
+  const { domain, customResource, globalDataLayerName } = useState();
 
   if (!hasId.value) {
     return;
@@ -27,16 +29,17 @@ export const bootstrap = () => {
 
   isBootstrapped.value = true;
 
-  allProperties.value.forEach((property) => {
-    const params = property.params || {};
+  if (!isTrackRouterEnabled.value) {
+    allProperties.value.forEach((property) => {
+      const params = property.params || {};
 
-    // in SPA send_page_view needs to be false during the first config call
-    if (typeof params.send_page_view === "undefined") {
-      params.send_page_view = false;
-    }
+      if (typeof params.send_page_view === "undefined") {
+        params.send_page_view = false;
+      }
 
-    query("config", property.id, params);
-  });
+      query("config", property.id, params);
+    });
+  }
 
   const resource =
     customResource.value ||
