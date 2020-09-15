@@ -1,10 +1,10 @@
+import firstConfigHit from "@/first-config-hit";
 import { merge } from "@/utils";
 import { watch, nextTick } from "vue";
-import { screenview, query, pageview } from "@/api";
+import { screenview, pageview } from "@/api";
 import {
   isTrackRouterEnabled,
   isTracking,
-  allProperties,
   routerState,
   useRouterState,
 } from "@/state";
@@ -28,18 +28,8 @@ export const getTemplate = (to = {}, from = {}) => {
   }
 };
 
-const view = (params) => {
-  const { useScreenview } = useRouterState();
-
-  if (useScreenview.value) {
-    screenview(params);
-  } else {
-    pageview(params);
-  }
-};
-
 export const trackpage = (to = {}, from = {}) => {
-  const { skipSamePath } = useRouterState();
+  const { useScreenview, skipSamePath } = useRouterState();
 
   if (skipSamePath.value && to.path === from.path) {
     return;
@@ -47,7 +37,11 @@ export const trackpage = (to = {}, from = {}) => {
 
   const params = getTemplate(to, from);
 
-  view(params);
+  if (useScreenview.value) {
+    screenview(params);
+  } else {
+    pageview(params);
+  }
 };
 
 export const trackRouter = (router, newState = {}) => {
@@ -64,16 +58,7 @@ export const trackRouter = (router, newState = {}) => {
 
       router.isReady().then(() => {
         nextTick(() => {
-          allProperties.value.forEach((property) => {
-            const params = property.params || {};
-
-            if (typeof params.send_page_view === "undefined") {
-              params.send_page_view = false;
-            }
-
-            query("config", property.id, params);
-          });
-
+          firstConfigHit();
           trackpage(router.currentRoute.value);
         });
 

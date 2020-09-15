@@ -1,11 +1,10 @@
+import firstConfigHit from "@/first-config-hit";
 import { watch } from "vue";
 import { loadScript, isBrowser } from "@/utils";
-import query from "@/api/query";
 import {
   isTracking,
   hasId,
   defaultProperty,
-  allProperties,
   useState,
   isBootstrapped,
   isReady,
@@ -22,15 +21,7 @@ export const bootstrap = () => {
   isBootstrapped.value = true;
 
   if (!isTrackRouterEnabled.value) {
-    allProperties.value.forEach((property) => {
-      const params = property.params || {};
-
-      if (typeof params.send_page_view === "undefined") {
-        params.send_page_view = false;
-      }
-
-      query("config", property.id, params);
-    });
+    firstConfigHit();
   }
 
   const resource =
