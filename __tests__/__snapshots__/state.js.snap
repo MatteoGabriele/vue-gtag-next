@@ -2,6 +2,9 @@
 
 exports[`options should render default plugin state 1`] = `
 Object {
+  "appId": null,
+  "appName": null,
+  "appVersion": null,
   "customResource": null,
   "domain": "https://www.googletagmanager.com",
   "globalDataLayerName": "dataLayer",

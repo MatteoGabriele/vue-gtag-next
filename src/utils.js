@@ -23,16 +23,8 @@ export const loadScript = (source, domain) => {
   });
 };
 
-export function merge(obj, src) {
-  Object.keys(src).forEach(function (key) {
-    const type = obj[key] && Object.prototype.toString.call(obj[key]);
-
-    if (type === "[object Object]" || type === "[object Array]") {
-      merge(obj[key], src[key]);
-      return;
-    }
-    obj[key] = src[key];
+export const merge = (obj = {}, newObj = {}) => {
+  Object.keys(newObj).forEach((key) => {
+    obj[key] = newObj[key];
   });
-
-  return obj;
-}
+};
