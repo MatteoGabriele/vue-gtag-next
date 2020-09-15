@@ -6,11 +6,12 @@ Object {
   "appName": null,
   "appVersion": null,
   "customResource": null,
-  "domain": "https://www.googletagmanager.com",
-  "globalDataLayerName": "dataLayer",
+  "dataLayerName": "dataLayer",
   "globalObjectName": "gtag",
   "isEnabled": true,
+  "preconnectOrigin": "https://www.googletagmanager.com",
   "property": null,
+  "resourceURL": "https://www.googletagmanager.com/gtag/js",
   "useDebugger": false,
 }
 `;

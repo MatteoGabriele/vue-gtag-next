@@ -6,12 +6,12 @@ export default () => {
     return;
   }
 
-  const { globalObjectName, globalDataLayerName } = useState();
+  const { globalObjectName, dataLayerName } = useState();
 
   if (window[globalObjectName.value] == null) {
-    window[globalDataLayerName.value] = window[globalDataLayerName.value] || [];
+    window[dataLayerName.value] = window[dataLayerName.value] || [];
     window[globalObjectName.value] = function () {
-      window[globalDataLayerName.value].push(arguments);
+      window[dataLayerName.value].push(arguments);
     };
   }
 

@@ -14,7 +14,7 @@ describe("register-global-object", () => {
 
   afterEach(() => {
     delete global[state.globalObjectName];
-    delete global[state.globalDataLayerName];
+    delete global[state.dataLayerName];
 
     jest.restoreAllMocks();
     jest.clearAllMocks();

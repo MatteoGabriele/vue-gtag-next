@@ -12,7 +12,7 @@ import {
 } from "@/state";
 
 export const bootstrap = () => {
-  const { domain, customResource, globalDataLayerName } = useState();
+  const { preconnectOrigin, resourceURL, dataLayerName } = useState();
 
   if (!isBrowser() || !hasId.value || isBootstrapped.value) {
     return;
@@ -24,11 +24,9 @@ export const bootstrap = () => {
     firstConfigHit();
   }
 
-  const resource =
-    customResource.value ||
-    `${domain.value}/gtag/js?id=${defaultProperty.value.id}&l=${globalDataLayerName.value}`;
+  const resource = `${resourceURL.value}?id=${defaultProperty.value.id}&l=${dataLayerName.value}`;
 
-  loadScript(resource, domain.value).then(() => {
+  loadScript(resource, preconnectOrigin.value).then(() => {
     isReady.value = true;
   });
 };

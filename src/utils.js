@@ -2,7 +2,7 @@ export const isBrowser = () => {
   return typeof document !== "undefined" && typeof window !== "undefined";
 };
 
-export const loadScript = (source, domain) => {
+export const loadScript = (source, preconnect) => {
   return new Promise((resolve, reject) => {
     const head = document.head || document.getElementsByTagName("head")[0];
     const script = document.createElement("script");
@@ -11,10 +11,10 @@ export const loadScript = (source, domain) => {
     script.src = source;
     script.charset = "utf-8";
 
-    if (domain) {
+    if (preconnect) {
       const link = document.createElement("link");
 
-      link.href = domain;
+      link.href = preconnect;
       link.rel = "preconnect";
 
       head.appendChild(link);

@@ -103,13 +103,13 @@ describe("bootstrap", () => {
   it("should load a custom source", () => {
     merge(state, {
       property: { id: 1 },
-      customResource: "foo.js",
+      resourceURL: "foo.js",
     });
 
     bootstrap();
 
     expect(loadScript).toHaveBeenCalledWith(
-      "foo.js",
+      "foo.js?id=1&l=dataLayer",
       "https://www.googletagmanager.com"
     );
   });
