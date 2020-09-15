@@ -1,7 +1,8 @@
 import { useState } from "@/state";
+import { isBrowser } from "@/utils";
 
 export default (...args) => {
-  if (typeof document === "undefined" || typeof window === "undefined") {
+  if (!isBrowser()) {
     return;
   }
 

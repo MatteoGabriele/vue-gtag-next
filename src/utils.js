@@ -1,3 +1,7 @@
+export const isBrowser = () => {
+  return typeof document !== "undefined" && typeof window !== "undefined";
+};
+
 export const loadScript = (source, domain) => {
   return new Promise((resolve, reject) => {
     const head = document.head || document.getElementsByTagName("head")[0];

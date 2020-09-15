@@ -1,5 +1,5 @@
 import { watch } from "vue";
-import { loadScript } from "@/utils";
+import { loadScript, isBrowser } from "@/utils";
 import query from "@/api/query";
 import {
   isTracking,
@@ -13,17 +13,9 @@ import {
 } from "@/state";
 
 export const bootstrap = () => {
-  if (typeof document === "undefined" || typeof window === "undefined") {
-    return;
-  }
-
-  if (isBootstrapped.value) {
-    return;
-  }
-
   const { domain, customResource, globalDataLayerName } = useState();
 
-  if (!hasId.value) {
+  if (!isBrowser() || !hasId.value || isBootstrapped.value) {
     return;
   }
 
