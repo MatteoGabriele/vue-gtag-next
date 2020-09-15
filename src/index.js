@@ -1,24 +1,19 @@
-import { setOptions as _setOptions, install } from "./install";
-import _bootstrap from "./bootstrap";
-import api from "./api";
+import { useBootstrapWatcher } from "@/bootstrap";
+import { merge } from "@/utils";
+import state from "@/state";
+import * as api from "@/api";
+import registerGlobalObject from "@/register-global-object";
 
-export default install;
-export { install };
+export default {
+  install: (app, newState = {}) => {
+    merge(state, newState);
+    registerGlobalObject();
+    useBootstrapWatcher();
 
-export const bootstrap = _bootstrap;
-export const setOptions = _setOptions;
+    app.config.globalProperties.$gtag = api;
+  },
+};
 
-// export api for usages outside Vuejs context
-export const query = api.query;
-export const config = api.config;
-export const event = api.event;
-export const pageview = api.pageview;
-export const screenview = api.screenview;
-export const customMap = api.customMap;
-export const time = api.time;
-export const exception = api.exception;
-export const linker = api.linker;
-export const purchase = api.purchase;
-export const set = api.set;
-export const optIn = api.optIn;
-export const optOut = api.optOut;
+export { isBootstrapped, isReady, isTracking, useState } from "@/state";
+export { default as useGtag } from "@/api/use-gtag";
+export { trackRouter } from "@/page-tracker";

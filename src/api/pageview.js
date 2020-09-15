@@ -1,19 +1,18 @@
-import event from "./event";
+import event from "@/api/event";
 
-export default (...args) => {
-  const [arg] = args;
+export default (value) => {
   let params = {};
 
-  if (typeof arg === "string") {
+  if (typeof value === "string") {
     params = {
-      page_path: arg,
+      page_path: value,
       page_location: window.location.href,
     };
   } else {
-    params = arg;
+    params = value;
   }
 
-  if (params.send_page_view == null) {
+  if (typeof params.send_page_view === "undefined") {
     params.send_page_view = true;
   }
 

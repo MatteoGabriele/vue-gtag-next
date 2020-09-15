@@ -1,6 +1,6 @@
 {
-  "name": "vue-gtag",
-  "description": "Global Site Tag (gtag.js) plugin for Vue",
+  "name": "vue-gtag-next",
+  "description": "Global Site Tag (gtag.js) plugin for Vue 3",
   "version": "0.0.0-development",
   "author": {
     "name": "Matteo Gabriele",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MatteoGabriele/vue-gtag"
+    "url": "https://github.com/MatteoGabriele/vue-gtag-next"
   },
   "scripts": {
     "commit": "git-cz",
@@ -56,23 +56,25 @@
     "vue",
     "vuejs"
   ],
-  "main": "./dist/vue-gtag.js",
-  "module": "./dist/vue-gtag.esm.js",
-  "unpkg": "./dist/vue-gtag.umd.js",
-  "jsdelivr": "./dist/vue-gtag.umd.js",
-  "types": "vue-gtag.d.ts",
+  "main": "./dist/vue-gtag-next.js",
+  "module": "./dist/vue-gtag-next.esm.js",
+  "unpkg": "./dist/vue-gtag-next.umd.js",
+  "jsdelivr": "./dist/vue-gtag-next.umd.js",
+  "types": "vue-gtag-next.d.ts",
   "files": [
     "dist",
-    "vue-gtag.d.ts"
+    "vue-gtag-next.d.ts"
   ],
   "bugs": {
-    "url": "https://github.com/MatteoGabriele/vue-gtag/issues"
+    "url": "https://github.com/MatteoGabriele/vue-gtag-next/issues"
   },
-  "homepage": "https://github.com/MatteoGabriele/vue-gtag#readme",
+  "homepage": "https://github.com/MatteoGabriele/vue-gtag-next#readme",
+  "peerDependencies": {
+    "vue": "^3.0.0-rc.4"
+  },
   "devDependencies": {
     "@babel/core": "^7.7.2",
     "@babel/preset-env": "^7.7.1",
-    "@vue/test-utils": "^1.0.0-beta.29",
     "babel-eslint": "^10.0.3",
     "bili": "^5.0.5",
     "commitizen": "^4.0.3",
@@ -80,15 +82,17 @@
     "del-cli": "^3.0.0",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.7.0",
-    "eslint-plugin-jest": "^23.0.4",
+    "eslint-plugin-jest": "^23.18.0",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^6.0.1",
     "flush-promises": "^1.0.2",
     "jest": "^26.0.1",
+    "mockdate": "^3.0.2",
     "prettier": "^2.0.5",
+    "rollup-plugin-alias": "^2.2.0",
     "semantic-release": "^15.13.31",
-    "vue": "^2.6.10",
     "vue-router": "^3.1.3",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.10",
+    "vue": "^3.0.0-rc.4"
   }
 }

@@ -1,8 +1,8 @@
-import { getOptions } from "../install";
-import event from "./event";
+import { useState } from "@/state";
+import event from "@/api/event";
 
 export default (...args) => {
-  const { appName } = getOptions();
+  const { appName } = useState();
   const [arg] = args;
   let params = {};
 

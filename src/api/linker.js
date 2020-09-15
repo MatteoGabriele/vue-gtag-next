@@ -1,5 +1,5 @@
-import config from "./config";
+import config from "@/api/config";
 
-export default (params) => {
-  config("linker", params);
+export default (...args) => {
+  config("linker", ...args);
 };

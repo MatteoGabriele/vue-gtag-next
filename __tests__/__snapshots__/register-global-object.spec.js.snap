@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`register-global-object should push arguments inside the dataLayer 1`] = `
+Array [
+  Arguments [
+    "js",
+    2020-01-01T01:01:01.000Z,
+  ],
+  Arguments [
+    "foo",
+    "bar",
+  ],
+]
+`;

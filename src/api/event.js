@@ -1,15 +1,12 @@
-import { getOptions } from "../install";
-import query from "./query";
+import query from "@/api/query";
+import { allProperties } from "@/state";
 
-export default (name, _params = {}) => {
-  const { defaultGroupName, includes } = getOptions();
-  const params = _params;
+export default (eventName, eventParams = {}) => {
+  const params = { ...eventParams };
 
-  if (includes && params.send_to == null) {
-    params.send_to = includes
-      .map((include) => include.id)
-      .concat(defaultGroupName);
+  if (!params.send_to && allProperties.value.length > 1) {
+    params.send_to = allProperties.value.map((property) => property.id);
   }
 
-  query("event", name, params);
+  query("event", eventName, params);
 };

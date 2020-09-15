@@ -1,291 +1,160 @@
-import config from "@/api/config";
-import bootstrap from "@/bootstrap";
-import { getRouter, getOptions } from "@/install";
+import state, { isReady, isBootstrapped } from "@/state";
+import { bootstrap } from "@/bootstrap";
+import { merge, loadScript } from "@/utils";
 import flushPromises from "flush-promises";
-import pageTracker from "@/page-tracker";
-import optOut from "@/api/opt-out";
-import * as util from "@/util";
+import query from "@/api/query";
 
 jest.mock("@/api/config");
-jest.mock("@/page-tracker");
-jest.mock("@/api/opt-out");
-jest.mock("@/install");
+jest.mock("@/api/query");
+
+jest.mock("@/utils", () => {
+  const utils = jest.requireActual("@/utils");
+  return {
+    ...utils,
+    loadScript: jest.fn(() => Promise.resolve()),
+  };
+});
+
+const defaultState = { ...state };
 
 describe("bootstrap", () => {
   beforeEach(() => {
-    util.loadScript = jest.fn(() => Promise.resolve());
+    isReady.value = false;
+    isBootstrapped.value = false;
+    merge(state, defaultState);
   });
 
   afterEach(() => {
+    jest.restoreAllMocks();
     jest.clearAllMocks();
-    global.gtag = undefined;
-    global.dataLayer = undefined;
   });
 
-  it("should load the gtag.js file", (done) => {
-    getOptions.mockReturnValueOnce({
-      globalDataLayerName: "dataLayer",
-      globalObjectName: "gtag",
-      config: {
-        id: 1,
-      },
-      customResourceURL: "https://www.googletagmanager.com/gtag/js",
-      customPreconnectOrigin: "https://www.googletagmanager.com",
+  it("should not load script without an id", () => {
+    bootstrap();
+
+    expect(loadScript).not.toHaveBeenCalled();
+  });
+
+  it("should not load script if already bootstrapped", () => {
+    merge(state, {
+      property: { id: 1 },
+    });
+
+    isBootstrapped.value = true;
+
+    bootstrap();
+
+    expect(loadScript).not.toHaveBeenCalled();
+  });
+
+  it("should not load script if no window is defined", () => {
+    const windowSpy = jest.spyOn(global, "window", "get");
+
+    windowSpy.mockImplementation(() => undefined);
+
+    merge(state, {
+      property: { id: 1 },
     });
 
     bootstrap();
 
-    flushPromises().then(() => {
-      expect(util.loadScript).toHaveBeenCalledWith(
-        "https://www.googletagmanager.com/gtag/js?id=1&l=dataLayer",
-        "https://www.googletagmanager.com"
-      );
-      done();
-    });
+    expect(loadScript).not.toHaveBeenCalled();
   });
 
-  it("should load gtag.js file from custom resource url", (done) => {
-    getOptions.mockReturnValueOnce({
-      globalDataLayerName: "dataLayer",
-      globalObjectName: "gtag",
-      config: {
-        id: 1,
-      },
-      customResourceURL: "https://www.example.com/gtag/js",
-      customPreconnectOrigin: "https://www.example.com",
+  it("should not load script if no document is defined", () => {
+    const documentSpy = jest.spyOn(global, "document", "get");
+
+    documentSpy.mockImplementation(() => undefined);
+
+    merge(state, {
+      property: { id: 1 },
     });
 
     bootstrap();
 
-    flushPromises().then(() => {
-      expect(util.loadScript).toHaveBeenCalledWith(
-        "https://www.example.com/gtag/js?id=1&l=dataLayer",
-        "https://www.example.com"
-      );
-      done();
-    });
+    expect(loadScript).not.toHaveBeenCalled();
   });
 
-  it("should not load the gtag.js file", () => {
-    getOptions.mockReturnValueOnce({
-      disableScriptLoad: true,
-      globalDataLayerName: "dataLayer",
-      globalObjectName: "gtag",
-      config: {
-        id: 1,
-      },
-      customResourceURL: "https://www.googletagmanager.com/gtag/js",
-      customPreconnectOrigin: "https://www.googletagmanager.com",
+  it("should load script", () => {
+    merge(state, {
+      property: { id: 1 },
     });
 
     bootstrap();
 
-    expect(util.loadScript).not.toHaveBeenCalled();
+    expect(loadScript).toHaveBeenCalledWith(
+      "https://www.googletagmanager.com/gtag/js?id=1&l=dataLayer",
+      "https://www.googletagmanager.com"
+    );
   });
 
-  it("should fire the onReady method when gtag is loaded", (done) => {
-    const spy = jest.fn();
-
-    getOptions.mockReturnValueOnce({
-      globalDataLayerName: "dataLayer",
-      globalObjectName: "gtag",
-      onReady: spy,
-      config: {
-        id: 1,
-      },
-      customResourceURL: "https://www.googletagmanager.com/gtag/js",
-      customPreconnectOrigin: "https://www.googletagmanager.com",
+  it("should set isReady to true once loadScript is resolved", async () => {
+    merge(state, {
+      property: { id: 1 },
     });
 
     bootstrap();
 
-    flushPromises().then(() => {
-      expect(spy).toHaveBeenCalled();
-      done();
-    });
+    await flushPromises();
+
+    expect(isReady.value).toEqual(true);
   });
 
-  it("should have dataLayer and gtag defined", (done) => {
-    getOptions.mockReturnValueOnce({
-      globalDataLayerName: "dataLayer",
-      globalObjectName: "gtag",
-      config: {
-        id: 1,
-      },
-      customResourceURL: "https://www.googletagmanager.com/gtag/js",
-      customPreconnectOrigin: "https://www.googletagmanager.com",
+  it("should load a custom source", () => {
+    merge(state, {
+      property: { id: 1 },
+      customResource: "foo.js",
     });
 
     bootstrap();
 
-    flushPromises().then(() => {
-      expect(global.dataLayer).toBeDefined();
-      expect(global.gtag).toBeDefined();
-      done();
-    });
+    expect(loadScript).toHaveBeenCalledWith(
+      "foo.js",
+      "https://www.googletagmanager.com"
+    );
   });
 
-  it("should opt-out when plugin has `enabled` set to false", (done) => {
-    getOptions.mockReturnValueOnce({
-      globalDataLayerName: "dataLayer",
-      globalObjectName: "gtag",
-      enabled: false,
-      config: {
+  it("should fire query once bootstrapped", () => {
+    merge(state, {
+      property: {
         id: 1,
+        params: { a: 1 },
       },
-      customResourceURL: "https://www.googletagmanager.com/gtag/js",
-      customPreconnectOrigin: "https://www.googletagmanager.com",
     });
 
     bootstrap();
 
-    flushPromises().then(() => {
-      expect(optOut).toHaveBeenCalled();
-      done();
+    expect(query).toHaveBeenCalledWith("config", 1, {
+      a: 1,
+      send_page_view: false,
     });
   });
 
-  it("should load the gtag.js file also when opt-out", (done) => {
-    getOptions.mockReturnValueOnce({
-      enabled: false,
-      globalDataLayerName: "dataLayer",
-      globalObjectName: "gtag",
-      config: {
-        id: 1,
-      },
-      customResourceURL: "https://www.googletagmanager.com/gtag/js",
-      customPreconnectOrigin: "https://www.googletagmanager.com",
+  it("should bootstrap multiple properties", () => {
+    merge(state, {
+      property: [
+        {
+          id: 1,
+          params: { a: 1 },
+        },
+        {
+          id: 2,
+          default: true,
+          params: { b: 1 },
+        },
+      ],
     });
 
     bootstrap();
 
-    flushPromises().then(() => {
-      expect(util.loadScript).toHaveBeenCalled();
-      done();
+    expect(query).toHaveBeenCalledTimes(2);
+    expect(query).toHaveBeenNthCalledWith(1, "config", 1, {
+      a: 1,
+      send_page_view: false,
     });
-  });
-
-  it("should have dataLayer and gtag defined also when opt-out", (done) => {
-    getOptions.mockReturnValueOnce({
-      enabled: false,
-      globalDataLayerName: "dataLayer",
-      globalObjectName: "gtag",
-      config: {
-        id: 1,
-      },
-      customResourceURL: "https://www.googletagmanager.com/gtag/js",
-      customPreconnectOrigin: "https://www.googletagmanager.com",
-    });
-
-    bootstrap();
-
-    flushPromises().then(() => {
-      expect(global.dataLayer).toBeDefined();
-      expect(global.gtag).toBeDefined();
-      done();
-    });
-  });
-
-  it("should inject a custom name for the gtag library", () => {
-    getOptions.mockReturnValueOnce({
-      globalDataLayerName: "dataLayer",
-      globalObjectName: "foo",
-      config: {
-        id: 1,
-      },
-      customResourceURL: "https://www.googletagmanager.com/gtag/js",
-      customPreconnectOrigin: "https://www.googletagmanager.com",
-    });
-
-    bootstrap();
-
-    expect(global.gtag).not.toBeDefined();
-    expect(global.foo).toBeDefined();
-
-    flushPromises();
-  });
-
-  it("should start tracking pages when enabled", () => {
-    getRouter.mockReturnValueOnce({});
-    getOptions.mockReturnValueOnce({
-      globalDataLayerName: "dataLayer",
-      globalObjectName: "gtag",
-      pageTrackerEnabled: true,
-      config: {
-        id: 1,
-      },
-      customResourceURL: "https://www.googletagmanager.com/gtag/js",
-      customPreconnectOrigin: "https://www.googletagmanager.com",
-    });
-
-    bootstrap();
-
-    expect(pageTracker).toHaveBeenCalled();
-    expect(config).not.toHaveBeenCalled();
-
-    flushPromises();
-  });
-
-  it("should not start tracking pages when disabled", () => {
-    getOptions.mockReturnValueOnce({
-      globalDataLayerName: "dataLayer",
-      globalObjectName: "gtag",
-      pageTrackerEnabled: false,
-      config: {
-        id: 1,
-      },
-      customResourceURL: "https://www.googletagmanager.com/gtag/js",
-      customPreconnectOrigin: "https://www.googletagmanager.com",
-    });
-
-    bootstrap();
-
-    expect(pageTracker).not.toHaveBeenCalled();
-
-    flushPromises();
-  });
-
-  it("should fire a config when pageTracker is not enabled", () => {
-    getOptions.mockReturnValueOnce({
-      globalDataLayerName: "dataLayer",
-      globalObjectName: "gtag",
-      config: {
-        id: 1,
-      },
-      customResourceURL: "https://www.googletagmanager.com/gtag/js",
-      customPreconnectOrigin: "https://www.googletagmanager.com",
-    });
-
-    bootstrap();
-
-    expect(config).toHaveBeenCalled();
-
-    flushPromises();
-  });
-
-  it("should return an error when script loading fails", (done) => {
-    util.warn = jest.fn();
-    util.loadScript = jest.fn(() => Promise.reject(new Error()));
-
-    getOptions.mockReturnValueOnce({
-      globalDataLayerName: "dataLayer",
-      globalObjectName: "gtag",
-      pageTrackerEnabled: true,
-      config: {
-        id: 1,
-      },
-      customResourceURL: "https://www.googletagmanager.com/gtag/js",
-      customPreconnectOrigin: "https://www.googletagmanager.com",
-    });
-
-    bootstrap();
-
-    flushPromises().then(() => {
-      expect(util.warn).toHaveBeenCalledWith(
-        "Ops! Something happened and gtag.js couldn't be loaded",
-        new Error()
-      );
-      done();
+    expect(query).toHaveBeenNthCalledWith(2, "config", 2, {
+      b: 1,
+      send_page_view: false,
     });
   });
 });

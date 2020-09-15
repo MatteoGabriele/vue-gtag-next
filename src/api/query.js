@@ -1,11 +1,15 @@
-import { getOptions } from "../install";
+import { useState } from "@/state";
 
-export default function (...args) {
-  const { globalObjectName } = getOptions();
-
-  if (typeof window === "undefined") {
+export default (...args) => {
+  if (typeof document === "undefined" || typeof window === "undefined") {
     return;
   }
 
-  window[globalObjectName](...args);
-}
+  const { globalObjectName, useDebugger } = useState();
+
+  if (useDebugger.value) {
+    console.warn("[vue-gtag] Debugger:", args);
+  }
+
+  window[globalObjectName.value](...args);
+};

@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`options should render default plugin state 1`] = `
+Object {
+  "customResource": null,
+  "domain": "https://www.googletagmanager.com",
+  "globalDataLayerName": "dataLayer",
+  "globalObjectName": "gtag",
+  "isEnabled": true,
+  "property": null,
+  "useDebugger": false,
+}
+`;

@@ -1,99 +1,90 @@
-import { getVue, getRouter, getOptions } from "./install";
-import { warn } from "./util";
-import api from "./api";
-import pageview from "./api/pageview";
-import screenview from "./api/screenview";
+import { merge } from "@/utils";
+import { watch, nextTick } from "vue";
+import { screenview, query, pageview } from "@/api";
+import {
+  isTrackRouterEnabled,
+  isTracking,
+  allProperties,
+  routeState,
+  useRouteState,
+} from "@/state";
 
-export const getPageviewTemplate = (to = {}, from = {}) => {
-  const {
-    pageTrackerTemplate,
-    pageTrackerScreenviewEnabled,
-    appName,
-  } = getOptions();
-
-  let template;
-  const customTemplate = pageTrackerTemplate(to, from);
+export const getTemplate = (to = {}, from = {}) => {
+  const { template, useScreenview, appName } = useRouteState();
+  const customTemplate = template.value ? template.value(to, from) : null;
 
   if (customTemplate) {
-    template = customTemplate;
-  } else if (pageTrackerScreenviewEnabled) {
-    template = {
-      app_name: appName,
+    return customTemplate;
+  } else if (useScreenview.value) {
+    return {
+      app_name: appName.value,
       screen_name: to.name,
     };
   } else {
-    template = {
+    return {
       page_title: to.name,
       page_path: to.path,
       page_location: window.location.href,
     };
   }
-
-  return template;
 };
 
-export const trackPage = ({ to = {}, from = {}, params = {} } = {}) => {
-  const {
-    pageTrackerSkipSamePath,
-    pageTrackerScreenviewEnabled,
-  } = getOptions();
+const view = (params) => {
+  const { useScreenview } = useRouteState();
 
-  if (pageTrackerSkipSamePath && to.path === from.path) {
-    return;
+  if (useScreenview.value) {
+    screenview(params);
+  } else {
+    pageview(params);
   }
-
-  const newParams = {
-    ...getPageviewTemplate(to, from),
-    ...params,
-  };
-
-  if (pageTrackerScreenviewEnabled && !newParams.app_name) {
-    warn("To use the screenview, add the appName to the plugin options");
-    return;
-  }
-
-  if (pageTrackerScreenviewEnabled && !newParams.screen_name) {
-    warn("To use the screenview, name your routes");
-    return;
-  }
-
-  if (pageTrackerScreenviewEnabled) {
-    screenview(newParams);
-    return;
-  }
-
-  pageview(newParams);
 };
 
-export const startRouter = (Router) => {
-  const Vue = getVue();
-  const { onBeforeTrack, onAfterTrack, config } = getOptions();
+export const trackpage = (to = {}, from = {}) => {
+  const { skipSamePath } = useRouteState();
 
-  /* istanbul ignore next */
-  Router.onReady((current) => {
-    Vue.nextTick().then(() => {
-      api.config(config.params);
-      trackPage({ to: current });
-    });
+  if (skipSamePath.value && to.path === from.path) {
+    return;
+  }
 
-    Router.afterEach((to, from) => {
-      Vue.nextTick().then(() => {
-        onBeforeTrack(to, from);
-        trackPage({ to, from });
-        onAfterTrack(to, from);
+  const params = getTemplate(to, from);
+
+  view(params);
+};
+
+export const trackRouter = (router, newState = {}) => {
+  isTrackRouterEnabled.value = true;
+
+  merge(routeState, newState);
+
+  watch(
+    () => isTracking.value,
+    (val) => {
+      if (!val) {
+        return;
+      }
+
+      router.isReady().then(() => {
+        nextTick(() => {
+          allProperties.value.forEach((property) => {
+            const params = property.params || {};
+
+            if (typeof params.send_page_view === "undefined") {
+              params.send_page_view = false;
+            }
+
+            query("config", property.id, params);
+          });
+
+          trackpage(router.currentRoute.value);
+        });
+
+        router.afterEach((to, from) => {
+          nextTick(() => {
+            trackpage(to, from);
+          });
+        });
       });
-    });
-  });
+    },
+    { immediate: true }
+  );
 };
-
-export const autotrack = () => {
-  const Router = getRouter();
-
-  if (!Router) {
-    return;
-  }
-
-  startRouter(Router);
-};
-
-export default autotrack;
