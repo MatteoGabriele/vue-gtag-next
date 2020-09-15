@@ -1,6 +1,6 @@
 {
-  "name": "vue-gtag",
-  "description": "Global Site Tag (gtag.js) plugin for Vue",
+  "name": "vue-gtag-next",
+  "description": "Global Site Tag (gtag.js) plugin for Vue 3",
   "version": "0.0.0-development",
   "author": {
     "name": "Matteo Gabriele",
@@ -9,7 +9,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MatteoGabriele/vue-gtag"
+    "url": "https://github.com/MatteoGabriele/vue-gtag-next"
   },
   "scripts": {
     "commit": "git-cz",
@@ -56,19 +56,19 @@
     "vue",
     "vuejs"
   ],
-  "main": "./dist/vue-gtag.js",
-  "module": "./dist/vue-gtag.esm.js",
-  "unpkg": "./dist/vue-gtag.umd.js",
-  "jsdelivr": "./dist/vue-gtag.umd.js",
-  "types": "vue-gtag.d.ts",
+  "main": "./dist/vue-gtag-next.js",
+  "module": "./dist/vue-gtag-next.esm.js",
+  "unpkg": "./dist/vue-gtag-next.umd.js",
+  "jsdelivr": "./dist/vue-gtag-next.umd.js",
+  "types": "vue-gtag-next.d.ts",
   "files": [
     "dist",
-    "vue-gtag.d.ts"
+    "vue-gtag-next.d.ts"
   ],
   "bugs": {
-    "url": "https://github.com/MatteoGabriele/vue-gtag/issues"
+    "url": "https://github.com/MatteoGabriele/vue-gtag-next/issues"
   },
-  "homepage": "https://github.com/MatteoGabriele/vue-gtag#readme",
+  "homepage": "https://github.com/MatteoGabriele/vue-gtag-next#readme",
   "peerDependencies": {
     "vue": "^3.0.0-rc.4"
   },
