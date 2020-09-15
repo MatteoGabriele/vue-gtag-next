@@ -16,12 +16,9 @@
   <a href="https://circleci.com/gh/MatteoGabriele/workflows/vue-gtag-next/tree/master">
     <img src="https://badgen.net/circleci/github/MatteoGabriele/vue-gtag-next/master">
   </a>
-  <a href="https://codeclimate.com/github/MatteoGabriele/vue-gtag-next/maintainability">
-    <img src="https://badgen.net/codeclimate/maintainability/MatteoGabriele/vue-gtag-next?icon=codeclimate">
-  </a>
-  <a href="https://codeclimate.com/github/MatteoGabriele/vue-gtag-next/test_coverage">
-    <img src="https://badgen.net/codeclimate/coverage/MatteoGabriele/vue-gtag-next?icon=codeclimate">
-  </a>
+  <a href="https://codeclimate.com/github/MatteoGabriele/vue-gtag-next/maintainability"><img src="https://api.codeclimate.com/v1/badges/9f3d988cf18bdc7b66c3/maintainability" /></a>
+  
+  <a href="https://codeclimate.com/github/MatteoGabriele/vue-gtag-next/test_coverage"><img src="https://api.codeclimate.com/v1/badges/9f3d988cf18bdc7b66c3/test_coverage" /></a>
 </p>
 
 # vue-gtag-next
