@@ -1,4 +1,4 @@
-<p align="center"><b>vue-gtag-next it's production ready because it's still a work-in-progress, not fully tested and also Vue 3 is not out yet. Feel free to play with it and let me know any feedback you have</b></p>
+<p align="center">vue-gtag-next <b>it's not production ready</b> because it's still a work-in-progress, not fully tested and also Vue 3 is not out yet. Feel free to play with it and let me know any feedback you have</p>
 <br />
 
 <p align="center">
