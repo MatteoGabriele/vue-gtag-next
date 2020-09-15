@@ -1,10 +1,10 @@
 import { watch } from "vue";
-import firstConfigHit from "@/first-config-hit";
 import { loadScript, isBrowser } from "@/utils";
-import { isTrackRouterEnabled } from "@/router-state";
+import { query } from "@/api";
 import {
   isTracking,
   hasId,
+  allProperties,
   defaultProperty,
   useState,
   isBootstrapped,
@@ -12,7 +12,12 @@ import {
 } from "@/state";
 
 export const bootstrap = () => {
-  const { preconnectOrigin, resourceURL, dataLayerName } = useState();
+  const {
+    disableScriptLoader,
+    preconnectOrigin,
+    resourceURL,
+    dataLayerName,
+  } = useState();
 
   if (!isBrowser() || !hasId.value || isBootstrapped.value) {
     return;
@@ -20,8 +25,14 @@ export const bootstrap = () => {
 
   isBootstrapped.value = true;
 
-  if (!isTrackRouterEnabled.value) {
-    firstConfigHit();
+  allProperties.value.forEach((property) => {
+    const params = Object.assign({ send_page_view: false }, property.params);
+    query("config", property.id, params);
+  });
+
+  if (disableScriptLoader.value) {
+    isReady.value = true;
+    return;
   }
 
   const resource = `${resourceURL.value}?id=${defaultProperty.value.id}&l=${dataLayerName.value}`;

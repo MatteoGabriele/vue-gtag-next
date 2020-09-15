@@ -1,12 +1,8 @@
 import { watch, nextTick } from "vue";
-import firstConfigHit from "@/first-config-hit";
 import { merge } from "@/utils";
 import { screenview, pageview } from "@/api";
 import { isTracking } from "@/state";
-import routerState, {
-  isTrackRouterEnabled,
-  useRouterState,
-} from "@/router-state";
+import routerState, { useRouterState } from "@/router-state";
 
 export const getTemplate = (to = {}, from = {}) => {
   const { template, useScreenview } = useRouterState();
@@ -44,8 +40,6 @@ export const trackpage = (to = {}, from = {}) => {
 };
 
 export const trackRouter = (router, newState = {}) => {
-  isTrackRouterEnabled.value = true;
-
   merge(routerState, newState);
 
   watch(
@@ -57,7 +51,6 @@ export const trackRouter = (router, newState = {}) => {
 
       router.isReady().then(() => {
         nextTick(() => {
-          firstConfigHit();
           trackpage(router.currentRoute.value);
         });
 

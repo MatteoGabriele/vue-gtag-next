@@ -1,4 +1,4 @@
-import { ref, toRefs, reactive } from "vue";
+import { toRefs, reactive } from "vue";
 
 const routerState = reactive({
   template: null,
@@ -7,7 +7,5 @@ const routerState = reactive({
 });
 
 export const useRouterState = () => toRefs(routerState);
-
-export const isTrackRouterEnabled = ref(false);
 
 export default routerState;
