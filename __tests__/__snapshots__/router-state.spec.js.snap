@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`options should render default router state 1`] = `
+Object {
+  "skipSamePath": true,
+  "template": null,
+  "useScreenview": false,
+}
+`;

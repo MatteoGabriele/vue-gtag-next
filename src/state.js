@@ -13,21 +13,11 @@ const state = reactive({
   appVersion: null,
 });
 
-export const routerState = reactive({
-  template: null,
-  useScreenview: false,
-  skipSamePath: true,
-});
-
 export const useState = () => toRefs(state);
-
-export const useRouterState = () => toRefs(routerState);
 
 export const isBootstrapped = ref(false);
 
 export const isReady = ref(false);
-
-export const isTrackRouterEnabled = ref(false);
 
 export const defaultProperty = computed(() => {
   const { property } = useState();
@@ -45,7 +35,8 @@ export const defaultProperty = computed(() => {
 
 export const hasId = computed(() => {
   const { property } = useState();
-  return property.value && property.value.id !== null;
+
+  return Boolean(property.value && property.value.id !== null);
 });
 
 export const allProperties = computed(() => {
@@ -62,7 +53,7 @@ export const isTracking = computed(() => {
   const { isEnabled } = useState();
   const property = defaultProperty.value;
 
-  return property && property.id && isEnabled.value;
+  return Boolean(property && property.id && isEnabled.value);
 });
 
 export default state;

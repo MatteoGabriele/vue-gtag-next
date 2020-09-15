@@ -1,6 +1,7 @@
-import firstConfigHit from "@/first-config-hit";
 import { watch } from "vue";
+import firstConfigHit from "@/first-config-hit";
 import { loadScript, isBrowser } from "@/utils";
+import { isTrackRouterEnabled } from "@/router-state";
 import {
   isTracking,
   hasId,
@@ -8,7 +9,6 @@ import {
   useState,
   isBootstrapped,
   isReady,
-  isTrackRouterEnabled,
 } from "@/state";
 
 export const bootstrap = () => {

@@ -1,13 +1,12 @@
+import { watch, nextTick } from "vue";
 import firstConfigHit from "@/first-config-hit";
 import { merge } from "@/utils";
-import { watch, nextTick } from "vue";
 import { screenview, pageview } from "@/api";
-import {
+import { isTracking } from "@/state";
+import routerState, {
   isTrackRouterEnabled,
-  isTracking,
-  routerState,
   useRouterState,
-} from "@/state";
+} from "@/router-state";
 
 export const getTemplate = (to = {}, from = {}) => {
   const { template, useScreenview } = useRouterState();
