@@ -1,4 +1,4 @@
-import { watch } from "vue";
+import { ref, watch } from "vue";
 import { loadScript, isBrowser } from "@/utils";
 import { query } from "@/api";
 import {
@@ -7,9 +7,11 @@ import {
   allProperties,
   defaultProperty,
   useState,
-  isBootstrapped,
-  isReady,
 } from "@/state";
+
+export const isReady = ref(false);
+
+export const isBootstrapped = ref(false);
 
 export const bootstrap = () => {
   const {

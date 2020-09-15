@@ -14,6 +14,7 @@ export default {
   },
 };
 
-export { isBootstrapped, isReady, isTracking, useState } from "@/state";
+export { isReady } from "@/bootstrap";
+export { isTracking, useState } from "@/state";
 export { default as useGtag } from "@/api/use-gtag";
 export { trackRouter } from "@/page-tracker";

@@ -1,4 +1,4 @@
-import { ref, reactive, computed, toRefs } from "vue";
+import { reactive, computed, toRefs } from "vue";
 
 const state = reactive({
   property: null,
@@ -16,10 +16,6 @@ const state = reactive({
 });
 
 export const useState = () => toRefs(state);
-
-export const isBootstrapped = ref(false);
-
-export const isReady = ref(false);
 
 export const defaultProperty = computed(() => {
   const { property } = useState();

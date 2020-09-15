@@ -1,5 +1,5 @@
-import state, { isReady, isBootstrapped } from "@/state";
-import { bootstrap } from "@/bootstrap";
+import state from "@/state";
+import { bootstrap, isReady, isBootstrapped } from "@/bootstrap";
 import { merge, loadScript } from "@/utils";
 import flushPromises from "flush-promises";
 import query from "@/api/query";
