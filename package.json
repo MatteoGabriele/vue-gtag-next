@@ -16,7 +16,7 @@
     "clean": "del-cli dist",
     "prebuild": "yarn clean",
     "build": "bili",
-    "dev": "bili --config bili.config.dev.js --watch",
+    "dev": "bili --watch",
     "lint": "eslint --ext .js .",
     "lint:fix": "yarn lint --fix",
     "test": "jest",
