@@ -1,3 +1,6 @@
+<p align="center"><b>vue-gtag-next it's production ready because it's still a working progress, not fully tested and also Vue 3 is not out yet. Feel free to play with it and let me know any feedback you have</b></p>
+<br />
+
 <p align="center">
   <img width="250" src="https://i.imgur.com/AlAf04U.png">
   <br>
