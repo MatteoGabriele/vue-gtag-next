@@ -8,18 +8,20 @@ const state = reactive({
   domain: "https://www.googletagmanager.com",
   customResource: null,
   useDebugger: false,
+  appName: null,
+  appId: null,
+  appVersion: null,
 });
 
-export const routeState = reactive({
+export const routerState = reactive({
   template: null,
-  appName: null,
   useScreenview: false,
   skipSamePath: true,
 });
 
 export const useState = () => toRefs(state);
 
-export const useRouteState = () => toRefs(routeState);
+export const useRouterState = () => toRefs(routerState);
 
 export const isBootstrapped = ref(false);
 

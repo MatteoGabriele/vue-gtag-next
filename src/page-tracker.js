@@ -5,19 +5,18 @@ import {
   isTrackRouterEnabled,
   isTracking,
   allProperties,
-  routeState,
-  useRouteState,
+  routerState,
+  useRouterState,
 } from "@/state";
 
 export const getTemplate = (to = {}, from = {}) => {
-  const { template, useScreenview, appName } = useRouteState();
+  const { template, useScreenview } = useRouterState();
   const customTemplate = template.value ? template.value(to, from) : null;
 
   if (customTemplate) {
     return customTemplate;
   } else if (useScreenview.value) {
     return {
-      app_name: appName.value,
       screen_name: to.name,
     };
   } else {
@@ -30,7 +29,7 @@ export const getTemplate = (to = {}, from = {}) => {
 };
 
 const view = (params) => {
-  const { useScreenview } = useRouteState();
+  const { useScreenview } = useRouterState();
 
   if (useScreenview.value) {
     screenview(params);
@@ -40,7 +39,7 @@ const view = (params) => {
 };
 
 export const trackpage = (to = {}, from = {}) => {
-  const { skipSamePath } = useRouteState();
+  const { skipSamePath } = useRouterState();
 
   if (skipSamePath.value && to.path === from.path) {
     return;
@@ -54,7 +53,7 @@ export const trackpage = (to = {}, from = {}) => {
 export const trackRouter = (router, newState = {}) => {
   isTrackRouterEnabled.value = true;
 
-  merge(routeState, newState);
+  merge(routerState, newState);
 
   watch(
     () => isTracking.value,
