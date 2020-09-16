@@ -60,17 +60,15 @@
   "module": "./dist/vue-gtag-next.esm.js",
   "unpkg": "./dist/vue-gtag-next.umd.js",
   "jsdelivr": "./dist/vue-gtag-next.umd.js",
-  "types": "vue-gtag-next.d.ts",
   "files": [
-    "dist",
-    "vue-gtag-next.d.ts"
+    "dist"
   ],
   "bugs": {
     "url": "https://github.com/MatteoGabriele/vue-gtag-next/issues"
   },
   "homepage": "https://github.com/MatteoGabriele/vue-gtag-next#readme",
   "peerDependencies": {
-    "vue": "^3.0.0-rc.4"
+    "vue": "^3.0.0-rc.11"
   },
   "devDependencies": {
     "@babel/core": "^7.7.2",
@@ -91,8 +89,6 @@
     "prettier": "^2.0.5",
     "rollup-plugin-alias": "^2.2.0",
     "semantic-release": "^15.13.31",
-    "vue": "^3.0.0-rc.4",
-    "vue-router": "^4.0.0-0",
-    "vue-template-compiler": "^2.6.10"
+    "vue": "^3.0.0-rc.11"
   }
 }
