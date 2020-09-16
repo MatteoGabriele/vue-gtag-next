@@ -23,7 +23,7 @@ export const getTemplate = (to = {}, from = {}) => {
   }
 };
 
-export const trackpage = (to = {}, from = {}) => {
+export const trackPage = (to = {}, from = {}) => {
   const { useScreenview, skipSamePath } = useRouterState();
 
   if (skipSamePath.value && to.path === from.path) {
@@ -51,12 +51,12 @@ export const trackRouter = (router, newState = {}) => {
 
       router.isReady().then(() => {
         nextTick(() => {
-          trackpage(router.currentRoute.value);
+          trackPage(router.currentRoute.value);
         });
 
         router.afterEach((to, from) => {
           nextTick(() => {
-            trackpage(to, from);
+            trackPage(to, from);
           });
         });
       });
