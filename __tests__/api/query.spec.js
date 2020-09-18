@@ -31,7 +31,9 @@ describe("api/query", () => {
   });
 
   it("should not call window.gtag", () => {
-    delete global.window;
+    const windowSpy = jest.spyOn(global, "window", "get");
+
+    windowSpy.mockImplementation(() => undefined);
 
     merge(state, {
       globalObjectName: "gtag",
@@ -40,5 +42,20 @@ describe("api/query", () => {
     query("foo", "bar");
 
     expect(global.window).toBeUndefined();
+  });
+
+  it("should log debugger events", () => {
+    console.warn = jest.fn();
+
+    merge(state, {
+      useDebugger: true,
+    });
+
+    query("foo", "bar");
+
+    expect(console.warn).toHaveBeenCalledWith("[vue-gtag] Debugger:", [
+      "foo",
+      "bar",
+    ]);
   });
 });

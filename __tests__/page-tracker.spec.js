@@ -3,7 +3,9 @@ import screenview from "@/api/screenview";
 import { merge } from "@/utils";
 import state from "@/state";
 import routerState from "@/router-state";
-import { trackPage } from "@/page-tracker";
+import { trackPage, trackRouter } from "@/page-tracker";
+import flushPromises from "flush-promises";
+import { ref } from "vue";
 
 jest.mock("@/api/pageview");
 jest.mock("@/api/screenview");
@@ -109,5 +111,45 @@ describe("page-tracker", () => {
       page_path: "bar",
       page_location: "/foo/bar",
     });
+  });
+
+  it("should start tracking when active and router is ready", async () => {
+    updateLocationPath("http://localhost/about");
+
+    const router = {
+      isReady: jest.fn(() => Promise.resolve()),
+      afterEach: jest.fn((fn) => fn(toMock, fromMock)),
+      currentRoute: ref(toMock),
+    };
+
+    merge(state, {
+      property: {
+        id: 1,
+      },
+    });
+
+    trackRouter(router);
+
+    await flushPromises();
+
+    expect(pageview).toHaveBeenCalledWith({
+      page_title: "about",
+      page_path: "/about",
+      page_location: "http://localhost/about",
+    });
+  });
+
+  it("should not start tracking if tracking is not active", async () => {
+    const router = {
+      isReady: jest.fn(() => Promise.resolve()),
+      afterEach: jest.fn((fn) => fn(toMock, fromMock)),
+      currentRoute: ref(toMock),
+    };
+
+    trackRouter(router);
+
+    await flushPromises();
+
+    expect(pageview).not.toHaveBeenCalled();
   });
 });

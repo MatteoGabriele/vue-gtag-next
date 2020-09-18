@@ -20,6 +20,16 @@ describe("register-global-object", () => {
     jest.clearAllMocks();
   });
 
+  it("should not register anything if is not a browser", () => {
+    const windowSpy = jest.spyOn(global, "window", "get");
+
+    windowSpy.mockImplementation(() => undefined);
+
+    registerGlobalObject();
+
+    expect(window).not.toBeDefined();
+  });
+
   it("should register gtag global object", () => {
     registerGlobalObject();
     expect(window.gtag).toBeDefined();

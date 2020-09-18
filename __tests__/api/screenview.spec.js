@@ -36,4 +36,30 @@ describe("api/screenview", () => {
       app_name: "MyApp",
     });
   });
+
+  it("should add the app_id when defined", () => {
+    merge(state, {
+      appId: 123,
+    });
+
+    screenview({ foo: "bar" });
+
+    expect(event).toHaveBeenCalledWith("screen_view", {
+      foo: "bar",
+      app_id: 123,
+    });
+  });
+
+  it("should add the app_version when defined", () => {
+    merge(state, {
+      appVersion: 123,
+    });
+
+    screenview({ foo: "bar" });
+
+    expect(event).toHaveBeenCalledWith("screen_view", {
+      foo: "bar",
+      app_version: 123,
+    });
+  });
 });

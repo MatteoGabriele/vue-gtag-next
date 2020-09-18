@@ -6,11 +6,11 @@ const defaultState = { ...state };
 
 describe("ga-disable", () => {
   beforeEach(() => {
-    delete global["ga-disable-1"];
     merge(state, defaultState);
   });
 
   afterEach(() => {
+    delete global["ga-disable-1"];
     jest.restoreAllMocks();
     jest.clearAllMocks();
   });
@@ -47,7 +47,9 @@ describe("ga-disable", () => {
   });
 
   it("should not fire the event", () => {
-    delete global.window;
+    const windowSpy = jest.spyOn(global, "window", "get");
+
+    windowSpy.mockImplementation(() => undefined);
 
     merge(state, {
       property: { id: 1 },
