@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`useGtag should return the api object 1`] = `
+Object {
+  "bar": 2,
+  "default": Object {
+    "bar": 2,
+    "foo": 1,
+  },
+  "foo": 1,
+}
+`;

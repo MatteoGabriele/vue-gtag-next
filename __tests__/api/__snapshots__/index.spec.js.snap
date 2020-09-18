@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`api should render the api object 1`] = `
+Array [
+  "config",
+  "customMap",
+  "disable",
+  "event",
+  "exception",
+  "linker",
+  "pageview",
+  "purchase",
+  "query",
+  "refund",
+  "screenview",
+  "set",
+  "time",
+]
+`;
