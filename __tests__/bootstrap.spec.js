@@ -1,5 +1,10 @@
-import state from "@/state";
-import { bootstrap, isReady, isBootstrapped } from "@/bootstrap";
+import state, { useState } from "@/state";
+import {
+  bootstrap,
+  isReady,
+  useBootstrapWatcher,
+  isBootstrapped,
+} from "@/bootstrap";
 import { merge, loadScript } from "@/utils";
 import flushPromises from "flush-promises";
 import query from "@/api/query";
@@ -156,5 +161,41 @@ describe("bootstrap", () => {
       b: 1,
       send_page_view: false,
     });
+  });
+
+  it("should not load the gtag api script", () => {
+    merge(state, {
+      disableScriptLoader: true,
+      property: {
+        id: "UA-1234567-8",
+      },
+    });
+
+    bootstrap();
+
+    expect(loadScript).not.toHaveBeenCalled();
+  });
+
+  it("should use the watcher to bootstrap the plugin", async () => {
+    merge(state, {
+      isEnabled: false,
+      property: {
+        id: "UA-1234567-8",
+      },
+    });
+
+    useBootstrapWatcher();
+
+    await flushPromises();
+
+    expect(loadScript).not.toHaveBeenCalled();
+
+    const { isEnabled } = useState();
+
+    isEnabled.value = true;
+
+    await flushPromises();
+
+    expect(loadScript).toHaveBeenCalled();
   });
 });

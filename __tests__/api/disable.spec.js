@@ -6,6 +6,7 @@ const defaultState = { ...state };
 
 describe("ga-disable", () => {
   beforeEach(() => {
+    delete global["ga-disable-1"];
     merge(state, defaultState);
   });
 
@@ -43,5 +44,17 @@ describe("ga-disable", () => {
 
     expect(global["ga-disable-1"]).toBe(false);
     expect(global["ga-disable-2"]).toBe(false);
+  });
+
+  it("should not fire the event", () => {
+    delete global.window;
+
+    merge(state, {
+      property: { id: 1 },
+    });
+
+    disable();
+
+    expect(global["ga-disable-1"]).toBeUndefined();
   });
 });
