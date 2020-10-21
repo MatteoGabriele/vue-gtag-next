@@ -42,7 +42,7 @@ npm install vue-gtag-next
 
 ## Documentation
 
-- nothing yet
+- [vue-gtag-next documentation](https://matteo-gabriele.gitbook.io/vue-gtag/v/next/)
 - [gtag.js official documentation](https://developers.google.com/analytics/devguides/collection/gtagjs)
 
 ## Issues and features requests
