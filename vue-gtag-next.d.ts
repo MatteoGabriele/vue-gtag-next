@@ -1,6 +1,5 @@
 declare module 'vue-gtag-next' {
-  import { Route } from 'vue-router/types/router';
-  import VueRouter from 'vue-router';
+  import { Router, RouteLocationRaw } from 'vue-router';
   import { App, Ref } from 'vue';
 
   /**
@@ -286,7 +285,7 @@ declare module 'vue-gtag-next' {
   }
 
   export interface RouterOptions {
-    template?: (to: Route, from?: Route) => PageView;
+    template?: (to: RouteLocationRaw, from?: RouteLocationRaw) => PageView;
     /** defaults to false */
     useScreenview?: boolean;
     /** defaults to true */
@@ -303,7 +302,7 @@ declare module 'vue-gtag-next' {
 
   export function useGtag(): VueGtag;
 
-  export function trackRouter(router: VueRouter, options?: RouterOptions): void;
+  export function trackRouter(router: Router, options?: RouterOptions): void;
 
   export default class VueGtagPlugin {
     static install(app: App, options: Options): void;
