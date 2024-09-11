@@ -1,4 +1,4 @@
-### Warning! If you are looking for strictly vue-gtag compatible with Vue3, you can simply install the latest vue-gtag v2. This package it's meant to be a new take on it, probably published under vue-gtag v3 soon.
+### Please, use vue-gtag v2.
 
 <p align="center">
   <img width="250" src="https://i.imgur.com/AlAf04U.png">
